@@ -2,14 +2,15 @@ FROM joplin/server:latest
 
 USER root
 
-# Install CA certificates
+# CA certs
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates \
   && update-ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
-# Fix pm2 log dir permissions (Joplin uses pm2 and writes to /opt/pm2)
+# Fix permissions for runtime writes (pm2 + server logs)
 RUN mkdir -p /opt/pm2 \
-  && chown -R node:node /opt/pm2
+  && chown -R node:node /opt/pm2 \
+  && chown -R node:node /home/joplin
 
 USER node
